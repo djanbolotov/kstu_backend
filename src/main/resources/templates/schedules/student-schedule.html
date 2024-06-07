@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Расписание студента</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a th:href="@{/disciplines/}">Дисциплины</a>
+    <a th:href="@{/groups/}">Группы</a>
+    <a th:href="@{/all-users}">Пользователи</a>
+    <a th:href="@{/statements}">Ведомости</a>
+</nav>
+<div class="container">
+    <h1>Расписание студента</h1>
+
+    <form th:action="@{/schedules/student/{id}(id=${studentId})}" method="get">
+        <div>
+            <label for="year">Год:</label>
+            <select id="year" name="year">
+                <option th:each="y : ${years}" th:value="${y}" th:text="${y}" th:selected="${y == selectedYear}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="semester">Семестр:</label>
+            <select id="semester" name="semester">
+                <option th:value="'Весенний семестр'" th:text="'Весенний семестр'" th:selected="${'Весенний семестр' == selectedSemester}"></option>
+                <option th:value="'Осенний семестр'" th:text="'Осенний семестр'" th:selected="${'Осенний семестр' == selectedSemester}"></option>
+            </select>
+        </div>
+        <button type="submit">Фильтр</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>День недели</th>
+            <th>Начало</th>
+            <th>Окончание</th>
+            <th>Дисциплина</th>
+            <th>Преподаватель</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="schedule : ${schedules}">
+            <td th:text="${schedule.id}"></td>
+            <td th:text="${schedule.dayOfWeek}"></td>
+            <td th:text="${schedule.startTime}"></td>
+            <td th:text="${schedule.endTime}"></td>
+            <td th:text="${schedule.statement.discipline.name}"></td>
+            <td th:text="${schedule.statement.teacher.user.firstName + ' ' + schedule.statement.teacher.user.lastName}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

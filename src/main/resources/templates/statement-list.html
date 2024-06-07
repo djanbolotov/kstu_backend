@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список ведомостей</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            display: inline-block;
+            margin-right: 5px;
+            text-decoration: none;
+            color: #007BFF;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            padding: 8px 16px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        a.delete {
+            color: red;
+            border-color: red;
+        }
+        a.delete:hover {
+            background-color: #ff6161;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a th:href="@{/disciplines/}">Дисциплины</a>
+    <a th:href="@{/groups/}">Группы</a>
+    <a th:href="@{/all-users}">Пользователи</a>
+    <a th:href="@{/statements}">Ведомости</a>
+</nav>
+<div class="container">
+    <h1>Список ведомостей</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Год</th>
+            <th>Семестр</th>
+            <th>Преподаватель</th>
+            <th>Дисциплина</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="statement : ${statements}">
+            <td th:text="${statement.id}"></td>
+            <td th:text="${statement.year}"></td>
+            <td th:text="${statement.semester}"></td>
+            <td th:text="${statement.teacher.user.username}"></td>
+            <td th:text="${statement.discipline.name}"></td>
+            <td>
+                <a th:href="@{/statements/edit/{id}(id=${statement.id})}">Редактировать</a>
+                <a th:href="@{/statements/delete/{id}(id=${statement.id})}" class="delete">Удалить</a>
+                <a th:href="@{/statements/{id} (id=${statement.id})}">Просмотр</a>
+                <a th:href="@{/schedules/teacher/{id} (id=${statement.teacher.id})}">Расписание преподавателя</a>
+                <a th:href="@{/attendances/create/statement/{id} (id=${statement.id})}">Создать посещаемость</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <a href="/statements/add">Добавить ведомость</a>
+</div>
+</body>
+</html>

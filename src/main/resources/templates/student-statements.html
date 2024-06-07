@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ведомости студента</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            padding: 8px 16px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a th:href="@{/disciplines/}">Дисциплины</a>
+    <a th:href="@{/groups/}">Группы</a>
+    <a th:href="@{/all-users}">Пользователи</a>
+    <a th:href="@{/statements}">Ведомости</a>
+</nav>
+<div class="container">
+    <h1>Ведомости студента</h1>
+
+    <form th:action="@{/statements/student/{studentId}/statements(studentId=${studentId})}" method="get">
+        <div>
+            <label for="year">Год:</label>
+            <select id="year" name="year">
+                <option th:value="${null}" th:text="Все"></option>
+                <option th:each="year : ${years}"
+                        th:value="${year}"
+                        th:text="${year}"
+                        th:selected="${year == selectedYear}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="semester">Полугодие:</label>
+            <select id="semester" name="semester">
+                <option th:value="${null}" th:text="Все"></option>
+                <option th:each="semester : ${semesters}"
+                        th:value="${semester}"
+                        th:text="${semester}"
+                        th:selected="${semester == selectedSemester}"></option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Фильтр</button>
+        </div>
+    </form>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Год</th>
+            <th>Полугодие</th>
+            <th>Учитель</th>
+            <th>Дисциплина</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="statement : ${statements}">
+            <td th:text="${statement.year}"></td>
+            <td th:text="${statement.semester}"></td>
+            <td th:text="${statement.teacher.user.firstName} + ' ' + ${statement.teacher.user.lastName}"></td>
+            <td th:text="${statement.discipline.name}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/">Назад</a>
+</div>
+</body>
+</html>

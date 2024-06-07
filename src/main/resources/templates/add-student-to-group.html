@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить студента в группу</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        form {
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            font-size: 1.1em;
+            color: #343a40;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a th:href="@{/disciplines/}">Дисциплины</a>
+    <a th:href="@{/groups/}">Группы</a>
+    <a th:href="@{/all-users}">Пользователи</a>
+    <a th:href="@{/statements}">Ведомости</a>
+</nav>
+
+<div class="container">
+    <h1>Добавить студента в группу: <span th:text="${group.name}"></span></h1>
+    <form th:action="@{/groups/add-students/{id}(id=${group.id})}" method="post">
+        <ul>
+            <li th:each="student : ${students}">
+                <label>
+                    <input type="checkbox" name="studentIds" th:value="${student.id}" />
+                    <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span>
+                </label>
+            </li>
+        </ul>
+        <div>
+            <button type="submit">Добавить выбранных студентов</button>
+        </div>
+    </form>
+    <a th:href="@{/groups/{id}(id=${group.id})}">Назад к группе</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить студентов в ведомость</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #343a40;
+        }
+        form {
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            font-size: 1.1em;
+            color: #343a40;
+        }
+        select, input[type="checkbox"] {
+            margin-bottom: 10px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a th:href="@{/disciplines/}">Дисциплины</a>
+    <a th:href="@{/groups/}">Группы</a>
+    <a th:href="@{/all-users}">Пользователи</a>
+    <a th:href="@{/statements}">Ведомости</a>
+</nav>
+<div class="container">
+    <h1>Добавить студентов в ведомость: <span th:text="${statement.year} + ' ' + ${statement.semester}"></span></h1>
+    <h2>Учитель: <span th:text="${statement.teacher.user.firstName} + ' ' + ${statement.teacher.user.lastName}"></span></h2>
+    <h2>Дисциплина: <span th:text="${statement.discipline.name}"></span></h2>
+
+    <form th:action="@{/statements/{id}/add-students(id=${statement.id})}" method="get">
+        <div>
+            <label for="group">Группа:</label>
+            <select id="group" name="groupId" th:onchange="this.form.submit()">
+                <option value="" th:text="'Выберите группу'"></option>
+                <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"
+                        th:selected="${group.id == selectedGroup}"></option>
+            </select>
+        </div>
+    </form>
+
+    <form th:action="@{/statements/{id}/add-students(id=${statement.id})}" method="post">
+        <div>
+            <ul>
+                <li th:each="student : ${students}">
+                    <input type="checkbox" name="studentIds" th:value="${student.id}"/>
+                    <span th:text="${student.user.firstName} + ' ' + ${student.user.lastName}"></span>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <button type="submit">Добавить студентов</button>
+        </div>
+    </form>
+
+    <a th:href="@{/statements/{id}(id=${statement.id})}">Назад к ведомости</a>
+</div>
+</body>
+</html>

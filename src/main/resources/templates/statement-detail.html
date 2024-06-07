@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ведомость</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #343a40;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #007BFF;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        select {
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a th:href="@{/disciplines/}">Дисциплины</a>
+    <a th:href="@{/groups/}">Группы</a>
+    <a th:href="@{/all-users}">Пользователи</a>
+    <a th:href="@{/statements}">Ведомости</a>
+</nav>
+
+<div class="container">
+    <h1>Ведомость: <span th:text="${statement.year} + ' ' + ${statement.semester}"></span></h1>
+    <h2>Учитель: <span th:text="${statement.teacher.user.firstName} + ' ' + ${statement.teacher.user.lastName}"></span></h2>
+    <h2>Дисциплина: <span th:text="${statement.discipline.name}"></span></h2>
+
+    <h2>Студенты</h2>
+    <form th:action="@{/statements/{id}/filter(id=${statement.id})}" method="get">
+        <div>
+            <label for="group">Группа:</label>
+            <select id="group" name="groupId" th:onchange="this.form.submit()">
+                <option value="" th:text="'Выберите группу'"></option>
+                <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"
+                        th:selected="${group.id == selectedGroup}"></option>
+            </select>
+        </div>
+    </form>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Просмотр</th>
+            <th>Расписание</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student : ${filteredStudents}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.user.firstName}"></td>
+            <td th:text="${student.user.lastName}"></td>
+            <td>
+                <a th:href="@{/statements/student/{studentId}/statements(studentId=${student.id})}">Просмотр</a>
+            </td>
+            <td>
+                <a th:href="@{/schedules/statement/{id}(id=${statement.id})}">Расписание</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/statements/{id}/add-students(id=${statement.id})}">Добавить студентов</a>
+    <a th:href="@{/statements}">Назад к списку ведомостей</a>
+</div>
+</body>
+</html>
